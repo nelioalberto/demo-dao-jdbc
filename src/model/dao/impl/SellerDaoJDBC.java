@@ -72,7 +72,6 @@ public class SellerDaoJDBC implements SellerDao {
 
 	}
 
-
 	private Seller instantieateSeller(ResultSet rs, Department dep) throws SQLException {
 		Seller obj = new Seller();
 		obj.setId(rs.getInt("Id"));
@@ -82,7 +81,6 @@ public class SellerDaoJDBC implements SellerDao {
 		obj.setBirthDate(rs.getDate("BirthDate"));
 		obj.setDepartment(dep);
 		return obj;
-		
 	}
 
 	private Department instantiateDepartment(ResultSet rs) throws SQLException {
@@ -94,8 +92,43 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public List<Seller> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"select "
+					+ "s.*, d.name DepName "
+					+ "from seller s " 
+					+ "inner join department d " 
+					+ "on s.DepartmentId = d.Id "
+					+ "order by s.Name"); 
+
+			rs = st.executeQuery();
+			
+			List<Seller> list = new ArrayList<>();
+			Map<Integer, Department> map = new HashMap<>();
+			
+			while  (rs.next()) {
+				
+				Department dep = map.get(rs.getInt("DepartmentId"));
+				if (dep == null) {
+					dep = instantiateDepartment(rs);
+					map.put(rs.getInt("DepartmentId"), dep);
+				}
+				
+				Seller obj = instantieateSeller(rs, dep);
+				list.add(obj);
+				
+			}
+			return list;
+		}	
+		catch (SQLException e ) {
+			throw new dbException(e.getMessage()); 
+		}
+		finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
 	}
 
 	@Override
@@ -105,8 +138,7 @@ public class SellerDaoJDBC implements SellerDao {
 		try {
 			st = conn.prepareStatement(
 					"select "
-					+ "s.Id, s.Name, s.Email, s.Birthdate, s.BaseSalary, "
-					+ "s.DepartmentId, d.id DepId, d.name DepName "
+					+ "s.*, d.name DepName "
 					+ "from seller s " 
 					+ "inner join department d " 
 					+ "on s.DepartmentId = d.Id "
