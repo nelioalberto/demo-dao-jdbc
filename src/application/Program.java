@@ -13,8 +13,6 @@ public class Program {
 		System.out.println(obj.toString());
 		Seller seller = new Seller(1, "nelio", "nalberto@gmail.com", new Date(), 12000.00, obj);
 		System.out.println(seller.toString());
-		
-		
 	}
 
 }
