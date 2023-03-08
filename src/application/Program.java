@@ -2,6 +2,8 @@ package application;
 
 import java.time.LocalDateTime;
 
+import model.dao.FactoryDao;
+import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
@@ -16,6 +18,9 @@ public class Program {
 		
 		Seller obj2 = new Seller(1,"Nelio","nelio@gmail.com", dtBirth, 12000.0, obj1); 
 		System.out.println(obj2.toString());
+		
+		SellerDao sellerDao = FactoryDao.createSellerDao(); 
+
 		
 	}
 
