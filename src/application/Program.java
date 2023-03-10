@@ -1,27 +1,28 @@
 package application;
 
-import java.time.LocalDateTime;
+import java.text.ParseException;
+import java.util.Date;
 
-import model.dao.FactoryDao;
+import model.dao.DaoFactory;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
 public class Program {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 
-		Department obj1 = new Department(1, "Books");
-		System.out.println(obj1.toString());
-		
-		LocalDateTime dtBirth = LocalDateTime.parse("1962-09-08T04:33:33");
-		
-		Seller obj2 = new Seller(1,"Nelio","nelio@gmail.com", dtBirth, 12000.0, obj1); 
-		System.out.println(obj2.toString());
-		
-		SellerDao sellerDao = FactoryDao.createSellerDao(); 
+		Department obj = new Department(1, "Books");
 
-		
+		Seller seller = new Seller(21, "Bob", "bob@gmail.com", new Date(), 3000.0, obj);
+
+		System.out.println(seller);
+ 		
+		SellerDao sellerDao = DaoFactory.createSellerDao();
+
+		Seller seller2 = sellerDao.findById(3);
+
+		System.out.println(seller2);
 	}
 
 }
